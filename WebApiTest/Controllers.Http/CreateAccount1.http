@@ -1,0 +1,22 @@
+###
+
+# curl -L 'http://localhost:5100/banking/owners/10000000-0000-0000-0000-000000000000/accounts' 
+#-H 'Content-Type: application/json' 
+#-d '{
+#  "id": "01000000-0000-0000-0000-000000000000",
+#  "iban": "DE10 1000",
+#  "balance": 2100,
+#  "ownerId":"10000000-0000-0000-0000-000000000000"
+#}'
+POST http://localhost:5100/banking/owners/10000000-0000-0000-0000-000000000000/accounts
+Content-Type: application/json
+
+{
+  "id": "01000000-0000-0000-0000-000000000000",
+  "iban": "DE10 1000",
+  "balance": 2100,
+  "ownerId": "10000000-0000-0000-0000-000000000000"
+}
+
+###
+

@@ -1,0 +1,20 @@
+# curl -L 'http://localhost:5100/banking/owners' 
+#-H 'Content-Type: application/json' 
+#--data-raw '{
+#  "id": "10000000-0000-0000-0000-000000000000",
+#  "name": "Erika Mustermann",
+#  "birthdate": "1988-02-01T00:00:00",
+#  "email": "e.mustermann@t.online.de"
+#}'
+POST http://localhost:5100/banking/owners
+Content-Type: application/json
+
+{
+  "id": "10000000-0000-0000-0000-000000000000",
+  "name": "Erika Mustermann",
+  "birthdate": "1988-02-01T00:00:00",
+  "email": "e.mustermann@t.online.de"
+}
+
+###
+

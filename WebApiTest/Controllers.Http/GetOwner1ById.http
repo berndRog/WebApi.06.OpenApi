@@ -1,0 +1,5 @@
+# curl -L 'http://localhost:5100/banking/owners/10000000-0000-0000-0000-000000000000'
+GET http://localhost:5100/banking/owners/10000000-0000-0000-0000-000000000000
+
+###
+

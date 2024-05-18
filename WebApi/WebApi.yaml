@@ -1,0 +1,570 @@
+openapi: 3.0.1
+info:
+  title: Web API
+  description: Prinzipbeispiel für REST API
+  version: "1.0"
+paths:
+  /banking/v1/owners/{ownerId}/accounts:
+    get:
+      tags:
+        - Accounts
+      summary: Get all accounts of a given ownerId
+      parameters:
+        - name: ownerId
+          in: path
+          description: ""
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AccountDto"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+    post:
+      tags:
+        - Accounts
+      summary: Create a new account for a given owner
+      parameters:
+        - name: ownerId
+          in: path
+          description: Id of the owner
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: Account data to create
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AccountDto"
+      responses:
+        "201":
+          description: "Created: Account created"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccountDto"
+        "400":
+          description: "BadRequest: OwnerId does not exist"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+        "409":
+          description: "Conflict: Account with given Id already exists"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+  /banking/v1/accounts/{id}:
+    get:
+      tags:
+        - Accounts
+      summary: Get account by Id
+      parameters:
+        - name: id
+          in: path
+          description: Id to find
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccountDto"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+  /banking/v1/name:
+    get:
+      tags:
+        - Accounts
+      summary: Get account by iban
+      parameters:
+        - name: iban
+          in: query
+          description: Iban to find
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccountDto"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+  /banking/v1/accounts/iban:
+    get:
+      tags:
+        - Accounts
+      summary: Get account by iban
+      parameters:
+        - name: iban
+          in: query
+          description: Iban to find
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccountDto"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+  /banking/v1/owners/{ownerId}/accounts/{id}:
+    delete:
+      tags:
+        - Accounts
+      summary: Delete an account for a given owner
+      parameters:
+        - name: ownerId
+          in: path
+          description: Id of the owner
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: id
+          in: path
+          description: Id of the account to delete
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+            text/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+            text/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+  /banking/error-development:
+    get:
+      tags:
+        - Errors
+      summary: Handle errors in development environment.
+      parameters:
+        - name: x-api-version
+          in: header
+          schema:
+            type: string
+      responses:
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+  /banking/error:
+    get:
+      tags:
+        - Errors
+      summary: Handle errors in production environment.
+      parameters:
+        - name: x-api-version
+          in: header
+          schema:
+            type: string
+      responses:
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+  /banking/v1/owners:
+    get:
+      tags:
+        - Owners
+      summary: Get all owners
+      responses:
+        "200":
+          description: "Ok: Owners returned"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/OwnerDto"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+    post:
+      tags:
+        - Owners
+      summary: Create an owner
+      requestBody:
+        description: Owner data to create
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OwnerDto"
+      responses:
+        "201":
+          description: "Created: Owner created"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OwnerDto"
+        "400":
+          description: "Bad request: Id in route and body do not match"
+        "409":
+          description: "Conflict: Owner with given id already exists"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+        "500":
+          description: Server internal error
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+  /banking/v1/owners/{id}:
+    get:
+      tags:
+        - Owners
+      summary: Get owner by Id
+      parameters:
+        - name: id
+          in: path
+          description: Id to find
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OwnerDto"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+    put:
+      tags:
+        - Owners
+      summary: Update an owner
+      parameters:
+        - name: id
+          in: path
+          description: Id of the owner to update
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: Owner data to update name or email
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OwnerDto"
+      responses:
+        "200":
+          description: "Ok: Owner updated"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OwnerDto"
+        "400":
+          description: "Bad request: Id in route and body do not match"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+        "404":
+          description: "Not found: Owner with given id not found"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+        "500":
+          description: Server internal error
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+    delete:
+      tags:
+        - Owners
+      summary: Delete owner
+      parameters:
+        - name: id
+          in: path
+          description: Id of the owner to delete
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+            text/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+        default:
+          description: Error
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+            text/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+  /banking/v1/owners/name:
+    get:
+      tags:
+        - Owners
+      summary: Get owner by name
+      parameters:
+        - name: name
+          in: query
+          description: Name to find
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OwnerDto"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+  /banking/v1/owners/email:
+    get:
+      tags:
+        - Owners
+      summary: Get owner by email
+      parameters:
+        - name: email
+          in: query
+          description: E-Mail to find
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OwnerDto"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+  /banking/v1/owners/birthdate:
+    get:
+      tags:
+        - Owners
+      summary: Get owners by birthdate
+      parameters:
+        - name: from
+          in: query
+          description: Birthdate from
+          schema:
+            type: string
+        - name: to
+          in: query
+          description: Birthdate to
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/OwnerDto"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+components:
+  schemas:
+    AccountDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        iban:
+          type: string
+          nullable: true
+        balance:
+          type: number
+          format: double
+        ownerId:
+          type: string
+          format: uuid
+      additionalProperties: false
+    OwnerDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          nullable: true
+        birthdate:
+          type: string
+          format: date-time
+        email:
+          type: string
+          nullable: true
+      additionalProperties: false
+    ProblemDetails:
+      type: object
+      properties:
+        type:
+          type: string
+          nullable: true
+        title:
+          type: string
+          nullable: true
+        status:
+          type: integer
+          format: int32
+          nullable: true
+        detail:
+          type: string
+          nullable: true
+        instance:
+          type: string
+          nullable: true
+      additionalProperties: {}
